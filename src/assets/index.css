@@ -1,0 +1,35 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@font-face {
+    font-family: MainTitle;
+    src: url("./fonts/linen-title.otf");
+}
+/* 
+* {
+    border: 0.1px solid black;
+} */
+
+.main-title {
+    font-family: MainTitle;
+}
+
+.pfont {
+    font-family: 'Poppins';
+}
+
+.banner {
+    background-image: url("./images/app-banner.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.discord-bg {
+    background-color: #5865F2;
+}
+
