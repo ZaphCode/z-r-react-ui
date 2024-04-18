@@ -21,11 +21,18 @@ const AccountTabs = () => {
 
   return (
     <div className="w-full px-10">
+      <div
+        className="bg-gray-50 border-b-2 border-dotted border-gray-300 cursor-pointer pfont flex pfont font-bold items-center justify-center p-3 w-full"
+      >
+        <div className={"flex items-center gap-x-4 text-neutral-700"}>
+          Options
+        </div>
+      </div>
       {tabs.map(({ name, icon }) => {
         if (name == "Logout")
           return (
             <div
-              className="bg-gray-100 cursor-pointer pfont justify-between flex items-center p-3 w-full"
+              className="cursor-pointer pfont justify-between flex items-center p-3 w-full"
               onClick={handleSignout}
               key={name}
             >
@@ -37,7 +44,7 @@ const AccountTabs = () => {
 
         return (
           <div
-            className="bg-gray-100 cursor-pointer pfont justify-between flex items-center px-4 py-3 w-full"
+            className=" cursor-pointer pfont justify-between flex items-center px-4 py-3 w-full"
             onClick={() => setSelectedTab(name)}
             key={name}
           >

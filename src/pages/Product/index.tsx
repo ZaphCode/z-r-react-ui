@@ -4,6 +4,7 @@ import useFetch from "../../hooks/useFetch";
 import { getProductByID } from "../../api/product";
 import { useCartStore } from "../../stores/cart";
 import { Product } from "../../models";
+import { formatPrice, getDiscountPrice } from "../../utils/functions";
 
 const ProductPage = () => {
   const { productId } = useParams();
@@ -71,7 +72,16 @@ const ProductPage = () => {
           </p>
           <div className="my-3">
             <p className="text-neutral-500 pfont text-lg">Price:</p>
-            <p className="font-bold text-neutral-900 text-3xl">${prod.price}</p>
+            {prod.discount_rate !== 0 ? (
+              <p className="font-bold text-neutral-900 text-3xl">
+                {formatPrice(getDiscountPrice(prod)) + " "}
+                <i className="font-normal line-through text-gray-400">
+                  {formatPrice(prod.price)}
+                </i>
+              </p>
+            ) : (
+              <p className="font-bold text-neutral-900 text-3xl">{formatPrice(prod.price)}</p>
+            )}
           </div>
           <div className="flex items-center gap-x-2 mb-10 mt-4">
             <button

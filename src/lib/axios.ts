@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { APIResp } from "../models";
+import { APIResp } from "../api/types";
 
 const API_URL = "http://localhost:9000/api";
 const TOKEN_HEADER = "X-Access-Token";
