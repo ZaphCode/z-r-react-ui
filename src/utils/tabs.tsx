@@ -21,5 +21,4 @@ export const tabs: AccountTab[] = [
   { name: "Orders", icon: <OrdersIcon /> },
   { name: "Addresses", icon: <AddressIcon /> },
   { name: "Payment Methods", icon: <CardIcon /> },
-  { name: "Logout", icon: <LogoutIcon /> },
 ];

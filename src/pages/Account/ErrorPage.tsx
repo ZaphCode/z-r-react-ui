@@ -1,4 +1,3 @@
-import { Navigate } from "react-router-dom";
 import { NavbarTitle } from "../../components/Navbar";
 import usePanicLogout from "../../hooks/usePanicLogout";
 

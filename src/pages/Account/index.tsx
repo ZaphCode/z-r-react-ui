@@ -13,13 +13,13 @@ const Account = () => {
         DASHBOARD
       </h3>
       <div className="grid grid-cols-1 lg:grid-cols-3 container  mx-auto">
-        <div className="lg:hidden">
+        <div className="lg:hidden mb-5">
           <AccountDropdown />
         </div>
         <div className="hidden lg:block">
           <AccountTabs />
         </div>
-        <div className="mx-5 lg:col-span-2">
+        <div className="mx-10 lg:col-span-2">
           <ActiveTab />
         </div>
       </div>
