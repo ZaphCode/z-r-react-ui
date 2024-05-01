@@ -5,11 +5,10 @@ import SearchIcon from "./icons/SearchIcon";
 import { useAuthStore } from "../stores/auth";
 import { useCartStore } from "../stores/cart";
 import { useEffect, useState } from "react";
-//import { RenderChecker } from "./RenderChecker";
 
 const Navbar = () => {
-  const authenticated = useAuthStore(store => store.authenticated);
-  const initialCount = useCartStore(store => store.items.length);
+  const authenticated = useAuthStore((store) => store.authenticated);
+  const initialCount = useCartStore((store) => store.items.length);
   const [prodsInCartCounter, setProdsInCartCounter] = useState(initialCount);
 
   useEffect(() => {

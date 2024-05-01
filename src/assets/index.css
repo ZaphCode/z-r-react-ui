@@ -4,7 +4,6 @@
 @tailwind utilities;
 
 
-
 @font-face {
     font-family: MainTitle;
     src: url("./fonts/linen-title.otf");
