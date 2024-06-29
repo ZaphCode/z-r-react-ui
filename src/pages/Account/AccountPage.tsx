@@ -35,7 +35,6 @@ const ActiveTab = () => {
     "Payment Methods": <PaymentMethods />,
     Addresses: <Addresses />,
     Orders: <Orders />,
-    Logout: <div></div>,
   };
 
   return tabs[activeTab];

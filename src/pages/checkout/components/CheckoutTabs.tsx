@@ -1,35 +1,22 @@
-import { FC } from "react";
-import { AddressIcon, BagIcon, CardIcon } from "../../../components/icons";
-import CheckIcon from "../../../components/icons/CheckIcon";
+import { useCheckoutTabsStore } from "../../../stores/checkoutTabs";
+import CheckoutTabComp from "./CheckoutTab";
 
 const CheckoutTabs = () => {
+  const checkoutTabs = useCheckoutTabsStore((state) => state.tabs);
   return (
     <div className="flex flex-row gap-x-4 justify-center items-baseline">
-      <CheckoutTab icon={<BagIcon />} />
-      <CheckoutTabDivider />
-      <CheckoutTab icon={<AddressIcon />} />
-      <CheckoutTabDivider />
-      <CheckoutTab icon={<CardIcon />} />
-      <CheckoutTabDivider />
-      <CheckoutTab icon={<CheckIcon />} />
-    </div>
-  );
-};
-
-interface CheckoutProps {
-  icon: JSX.Element;
-}
-
-const CheckoutTab: FC<CheckoutProps> = ({ icon }) => {
-  return (
-    <div className="bg-neutral-800 shadow-lg shadow-gray-400 w-12 h-12 rounded-full flex justify-center items-center text-white">
-      {icon}
+      {checkoutTabs.map((tab, index) => (
+        <div className="flex gap-x-4 justify-center">
+          <CheckoutTabComp key={index} tab={tab} />
+          {index < checkoutTabs.length - 1 && <CheckoutTabDivider />}
+        </div>
+      ))}
     </div>
   );
 };
 
 const CheckoutTabDivider = () => {
-  return <div className="w-10 flex justify-center text-center">---</div>;
+  return <div className="w-10 pt-2.5 flex justify-center text-center">---</div>;
 };
 
 export default CheckoutTabs;
