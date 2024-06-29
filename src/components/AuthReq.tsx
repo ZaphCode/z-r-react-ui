@@ -7,9 +7,14 @@ interface Props {
 }
 
 const AuthReq: FC<Props> = ({ children }) => {
-  const authenticated = useAuthStore(store => store.authenticated);
+  const authenticated = useAuthStore((store) => store.authenticated);
+  const setLastRedirectedUrl = useAuthStore(
+    (store) => store.setLastRedirectedUrl
+  );
 
-  if (!authenticated) return <Navigate to={"/auth"} replace={true} />;
+  if (!authenticated) {
+    return <Navigate to={"/auth"} />;
+  }
 
   return children;
 };

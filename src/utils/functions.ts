@@ -1,6 +1,7 @@
 import { isAxiosError } from "axios";
 import { APIResult } from "../api/types";
 import { Product } from "../models";
+import { CartItem } from "../stores/cart";
 
 export function handleError<T>(error: unknown): APIResult<T> {
   let errorResult = { message: "Error calling api" };
@@ -13,6 +14,7 @@ export function handleError<T>(error: unknown): APIResult<T> {
 
 export function parseAPIError(error: unknown): Error {
   let errorResult = new Error("Error calling Api");
+  console.warn("Error calling Api from parseAPIErr()", error)
 
   if (isAxiosError(error)) {
     errorResult = new Error(error.response?.data.message);
@@ -26,4 +28,22 @@ export function formatPrice(price: number) {
 
 export function getDiscountPrice(product: Product): number {
   return product.price - product.price * (product.discount_rate / 100)
+}
+
+export function getTotal(items: CartItem[]) {
+  let total: number = 0;
+
+  for (const { product, quantity } of items) {
+    let realPrice =
+      product.discount_rate !== 0
+        ? (
+            (product.price - product.price * (product.discount_rate / 100)) /
+            100
+          ).toFixed(2)
+        : (product.price / 100).toFixed(2);
+
+    total += parseFloat(realPrice) * quantity;
+  }
+
+  return parseFloat(total.toFixed(2));
 }

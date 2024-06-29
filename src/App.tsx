@@ -1,6 +1,6 @@
+import { Toaster } from "react-hot-toast";
 import Routes from "./Routes";
 import Debug from "./components/Debug";
-import Navbar from "./components/Navbar";
 import useInitAuth from "./hooks/useInitAuth";
 
 function App() {
@@ -12,6 +12,7 @@ function App() {
     <>
       <Debug />
       <Routes />
+      <Toaster position="top-right" reverseOrder={false} />
     </>
   );
 }

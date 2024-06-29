@@ -1,34 +1,47 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
 @font-face {
-    font-family: MainTitle;
-    src: url("./fonts/linen-title.otf");
+  font-family: MainTitle;
+  src: url("./fonts/linen-title.otf");
 }
-/* 
-* {
-    border: 0.1px solid black;
-} */
+
+@layer base {
+  body {
+    @apply bg-gray-100;
+  }
+}
 
 .main-title {
-    font-family: MainTitle;
+  font-family: MainTitle;
 }
 
 .pfont {
-    font-family: 'Poppins';
+  font-family: "Poppins";
 }
 
 .banner {
-    background-image: url("./images/app-banner.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+  background-image: url("./images/app-banner.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .discord-bg {
-    background-color: #5865F2;
+  background-color: #5865f2;
 }
 
+@keyframes subtleBounce {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+.bounce {
+  animation: subtleBounce 3s infinite;
+}

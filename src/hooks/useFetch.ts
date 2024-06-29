@@ -14,7 +14,7 @@ function useFetch<Data, Arg>(
   const [fetchResultData, setFetchResultData] = useState<FetchResult<Data>>({
     loading: true,
     data: null,
-    err: new Error("asd"),
+    err: new Error(""),
   });
 
   useEffect(() => {
@@ -25,6 +25,8 @@ function useFetch<Data, Arg>(
         const result = await fetchFunction(initialArg);
         setFetchResultData(prev => ({ ...prev, data: result, err: null }));
       } catch (error) {
+        console.log(error);
+        
         setFetchResultData(prev => ({
           ...prev,
           data: null,

@@ -11,14 +11,16 @@ const ItemCard: FC<Props> = ({ product }) => {
   const navigate = useNavigate();
   return (
     <div
-      className="cursor-pointer"
+      className="cursor-pointer hover:-translate-y-2 transition-all duration-500 ease-out"
       onClick={() => navigate(`/product/${product.id}`)}
     >
-      <div className="bg-gray-300 w-52 h-60">
+      <div className="bg-gray-300 w-52 h-56">
         <img src={product.images_url[0]} alt="main image" />
       </div>
-      <div className="py-5 bg-gray-50 border-b-2 border-dotted border-gray-200 pl-4">
-        <p className="pfont font-bold text-xs truncate w-44 overflow-clip">{product.name}</p>
+      <div className="py-5 bg-gray-50 shadow-xl shadow-gray-300 border-gray-200 pl-4">
+        <p className="pfont font-bold text-xs truncate w-44 overflow-clip">
+          {product.name}
+        </p>
         {product.discount_rate !== 0 ? (
           <p>
             {formatPrice(getDiscountPrice(product)) + " "}

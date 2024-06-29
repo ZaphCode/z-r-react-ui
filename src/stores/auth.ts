@@ -4,11 +4,13 @@ import { User } from "../models";
 interface Data {
   user: User;
   authenticated: boolean;
+  lastRedirectedUrl: string;
 }
 
 interface Actions {
   signin: (user: User) => void;
   signout: () => void;
+  setLastRedirectedUrl: (url: string) => void;
 }
 
 const userInitialState: User = {
@@ -27,7 +29,9 @@ const userInitialState: User = {
 export const useAuthStore = create<Data & Actions>((set, get) => ({
   user: userInitialState,
   authenticated: false,
+  lastRedirectedUrl: "/",
   signin: (user: User) => set({ ...get(), user, authenticated: true }),
   signout: () =>
     set({ ...get(), user: userInitialState, authenticated: false }),
+  setLastRedirectedUrl: (url: string) => set({ ...get(), lastRedirectedUrl: url }),
 }));

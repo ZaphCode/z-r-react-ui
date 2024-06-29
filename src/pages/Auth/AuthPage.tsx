@@ -5,7 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { authFormSchema, AuthFormSchemaType } from "../../utils/schemas";
 import { useAuthStore } from "../../stores/auth";
 import { signinAPICall } from "../../api/auth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import OAuthButtons from "./components/OAuthButtons";
 import { AccountIcon, KeyIcon, UserIcon } from "../../components/icons";
 import AuthInput from "./components/AuthInput";
@@ -23,9 +23,11 @@ const Auth = () => {
 
   const [isSignupMode, setIsSignupMode] = useState(false);
   const navigate = useNavigate();
-  const signin = useAuthStore(store => store.signin);
+  const signin = useAuthStore((store) => store.signin);
+  const location = useLocation();
+  // const lastRedirectedUrl = useAuthStore((store) => store.lastRedirectedUrl);
 
-  const onSubmit: SubmitHandler<AuthFormSchemaType> = async data => {
+  const onSubmit: SubmitHandler<AuthFormSchemaType> = async (data) => {
     const [resp, err] = await signinAPICall(data, isSignupMode);
 
     if (err) return toast.error(err.message);
@@ -34,10 +36,16 @@ const Auth = () => {
 
     toast.success("Success!");
 
-    setTimeout(() => navigate("/"), 1000);
+    setTimeout(
+      () =>
+        location.state
+          ? navigate(location.state.from)
+          : navigate(document.referrer),
+      1000
+    );
   };
 
-  const onError: SubmitErrorHandler<AuthFormSchemaType> = data => {
+  const onError: SubmitErrorHandler<AuthFormSchemaType> = (data) => {
     if (data.email?.message) toast.error(data.email.message);
     if (data.password?.message) toast.error(data.password.message);
     if (data.username?.message) toast.error(data.username.message);
@@ -65,7 +73,10 @@ const Auth = () => {
           {isSignupMode
             ? "I already have an account. "
             : "Don't have an account yet? "}
-          <button className="text-neutral-900" onClick={handleSignupButton}>
+          <button
+            className="text-neutral-700 underline font-semibold"
+            onClick={handleSignupButton}
+          >
             {isSignupMode ? "Sign in" : "Sign up"}
           </button>
         </p>

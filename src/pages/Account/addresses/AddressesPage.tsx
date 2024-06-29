@@ -2,22 +2,55 @@ import { getAuthUserAddresses } from "../../../api/addresses";
 import Modal from "../../../components/Modal";
 import useFetch from "../../../hooks/useFetch";
 import useModal from "../../../hooks/useModal";
+import NewAddressForm from "./components/NewAddressForm";
 
 const Addresses = () => {
   const { data, err } = useFetch(getAuthUserAddresses, {});
   const [isNewAddrModalOpen, openNewAddrModal, closeNewAddrModal] = useModal();
 
+  const closeModalFn = () => {
+    closeNewAddrModal();
+  };
+
   if (err) return <div>Error! {err.message}</div>;
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div className="">
           <h4 className="font-bold pfont mb-3 text-neutral-700">
             My Addresses
           </h4>
           {data.length > 0 ? (
-            <div></div>
+            <div className="flex flex-col gap-y-5">
+              {data.map((addr) => (
+                <div
+                  key={addr.id}
+                  className="bg-white shadow-lg shadow-gray-200"
+                >
+                  <div className="flex justify-between items-centers p-3">
+                    <div className="w-full">
+                      <div className="flex justify-between">
+                        <h5 className="text-lg font-semibold text-neutral-700">
+                          {addr.name}
+                        </h5>
+                        <div>
+                          <button>a</button>
+                          <button>b</button>
+                        </div>
+                      </div>
+                      <p className="text-neutral-500">
+                        {addr.line1} - {addr.line2}
+                      </p>
+                      <p className="text-neutral-500">
+                        {addr.city}, {addr.state} {addr.postal_code}
+                      </p>
+                      <p className="text-neutral-500">{addr.country}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
             <div>
               <p className="text-neutral-500 text-lg">
@@ -31,18 +64,7 @@ const Addresses = () => {
             Add new +
           </button>
           <Modal isOpen={isNewAddrModalOpen} closeFn={closeNewAddrModal}>
-            <div className="w-72">
-              <h3 className="text-2xl pfont font-bold">Hello world!</h3>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Voluptatibus, soluta blanditiis, consequatur minus harum
-                cupiditate nam autem delectus molestias, in doloribus
-                reprehenderit quasi ipsa. Iure illum saepe aperiam officia
-                inventore ducimus possimus similique beatae, odio, laboriosam
-                tempora aut, non voluptate culpa ipsum? Eaque libero facere
-                cumque eius tempore cum rerum!
-              </p>
-            </div>
+            <NewAddressForm closeModalFn={closeModalFn} />
           </Modal>
         </div>
         <div className="">

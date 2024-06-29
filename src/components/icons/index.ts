@@ -12,3 +12,4 @@ export { default as LogoutIcon } from "./LogoutIcon";
 export { default as OrdersIcon } from "./OrdersIcon";
 export { default as SearchIcon } from "./SearchIcon";
 export { default as UserIcon } from "./UserIcon";
+export { default as TagIcon } from "./TagIcon";

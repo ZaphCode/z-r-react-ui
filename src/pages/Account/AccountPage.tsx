@@ -1,10 +1,10 @@
 import AccountDropdown from "./components/AccountDropdown";
 import AccountTabs from "./components/AccountTabs";
 import { useAccountTabsStore } from "../../stores/accountTabs";
-import Details from "./components/Details";
-import Addresses from "./components/Addresses";
-import Orders from "./components/Orders";
-import PaymentMethods from "./components/PaymentMethods";
+import Details from "./details/DetailsPage";
+import Addresses from "./addresses/AddressesPage";
+import Orders from "./orders/OrdersPage";
+import PaymentMethods from "./payment/PaymentMethodsPage";
 
 const Account = () => {
   return (
@@ -19,7 +19,7 @@ const Account = () => {
         <div className="hidden lg:block">
           <AccountTabs />
         </div>
-        <div className="mx-10 lg:col-span-2">
+        <div className="mx-3 lg:col-span-2">
           <ActiveTab />
         </div>
       </div>
@@ -28,7 +28,7 @@ const Account = () => {
 };
 
 const ActiveTab = () => {
-  const activeTab = useAccountTabsStore(store => store.selectedTab);
+  const activeTab = useAccountTabsStore((store) => store.selectedTab);
 
   const tabs = {
     "Account Details": <Details />,

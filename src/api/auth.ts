@@ -21,7 +21,7 @@ export const signinAPICall = async (
 
     return [resp.data.data, null];
   } catch (error) {
-    return handleError<SigninData>(error);
+    return handleError(error);
   }
 };
 
@@ -33,7 +33,7 @@ export const signoutAPICall = async (): Promise<APIResult<null>> => {
 
     return [resp.data.data, null];
   } catch (error) {
-    return handleError<null>(error);
+    return handleError(error);
   }
 };
 
@@ -47,6 +47,6 @@ export const getOAuthURLAPICall = async (
 
     return [resp.data.data, null];
   } catch (error) {
-    return handleError<string>(error);
+    return handleError(error);
   }
 };

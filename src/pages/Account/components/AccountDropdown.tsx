@@ -5,7 +5,9 @@ import { useAccountTabsStore } from "../../../stores/accountTabs";
 const AccountDropdown = () => {
   const [selectedTab, setSelectedTab] = useState<AccountTab>(tabs[0]);
   const [isTabsActive, setIsTabsActive] = useState(false);
-  const setSelectedTabName = useAccountTabsStore(store => store.setSelectedTab);
+  const setSelectedTabName = useAccountTabsStore(
+    (store) => store.setSelectedTab
+  );
 
   return (
     <div className="flex-col gap-y-5 flex items-center">
@@ -17,13 +19,14 @@ const AccountDropdown = () => {
       </div>
       {isTabsActive && (
         <div className="max-h-36 overflow-x-hidden w-5/6 ">
-          {tabs.map(tab => (
+          {tabs.map((tab) => (
             <div
               onClick={() => {
                 setSelectedTab(tab);
-                setSelectedTabName(tab.name)
+                setSelectedTabName(tab.name);
                 setIsTabsActive(false);
               }}
+              key={tab.name}
               className="bg-gray-50 pfont justify-between flex items-center p-2 w-full"
             >
               <div className="flex items-center gap-x-3 text-neutral-600">

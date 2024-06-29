@@ -1,12 +1,12 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Home from "./pages/Home";
-import Auth from "./pages/Auth";
-import Account from "./pages/Account";
+import Home from "./pages/home/HomePage";
+import Auth from "./pages/auth/AuthPage";
+import Account from "./pages/account/AccountPage";
 import AuthReq from "./components/AuthReq";
-import Product from "./pages/Product";
-import ErrorPage from "./pages/Account/ErrorPage";
-import Cart from "./pages/Cart";
+import Product from "./pages/product/ProductPage";
+import ErrorPage from "./pages/account/ErrorPage";
 import { BaseLayout } from "./components/icons/BaseLayout";
+import CheckoutPage from "./pages/checkout/CheckoutPage";
 
 const router = createBrowserRouter([
   {
@@ -31,11 +31,11 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/cart",
+    path: "/checkout",
     element: (
-      <BaseLayout>
-        <Cart />
-      </BaseLayout>
+      <AuthReq>
+        <CheckoutPage />
+      </AuthReq>
     ),
   },
   {

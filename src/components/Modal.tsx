@@ -1,4 +1,5 @@
 import { FC } from "react";
+import CloseIcon from "./icons/CloseIcon";
 
 interface Props {
   children: React.ReactNode;
@@ -12,7 +13,7 @@ const Modal: FC<Props> = ({ children, closeFn, isOpen }) => {
       onClick={closeFn}
       className={`
             fixed inset-0 flex justify-center items-center transition-colors
-            ${isOpen ? "visible bg-black/10" : "invisible"}
+            ${isOpen ? "visible bg-black/20" : "invisible"}
           `}
     >
       <div
@@ -25,11 +26,11 @@ const Modal: FC<Props> = ({ children, closeFn, isOpen }) => {
         <button
           onClick={closeFn}
           className={`
-					      absolute top-2 right-2 p-1 rounded-lg text-gray-400 
+					      absolute top-2 right-2 p-1 rounded-full text-gray-400 
                 bg-white hover:bg-gray-50 hover:text-gray-600
               `}
         >
-          x {/* Or whatever icon */}
+          <CloseIcon />
         </button>
         {children}
       </div>
