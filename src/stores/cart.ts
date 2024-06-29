@@ -23,7 +23,6 @@ export const useCartStore = create(
   persist<Data & Actions>(
     (set, get) => ({
       items: [],
-      //prodsCounter: get().items.length,
       addToCart(product) {
         const existingCartItem = get().items.find(
           item => item.product.id === product.id

@@ -2,10 +2,12 @@ import { useMemo } from "react";
 import ProductInCart from "../../../components/ProductInCart";
 import { useCartStore } from "../../../stores/cart";
 import { getTotal } from "../../../utils/functions";
+import { useCheckoutTabsStore } from "../../../stores/checkoutTabs";
 
 const CartOverview = () => {
   const cartItems = useCartStore((store) => store.items);
   const calculation = useMemo(() => getTotal(cartItems), [cartItems]);
+  const setSelectedTab = useCheckoutTabsStore((store) => store.setSelectedTab);
 
   return (
     <div>
@@ -40,7 +42,7 @@ const CartOverview = () => {
             </div>
             <div className="my-1 pb-3 border-b-2 border-gray-300">
               <button className="bg-gray-200 text-xs text-gray-500 px-3 py-1">
-                ADD PROMOCODE
+                add promocode
               </button>
             </div>
             <div className="flex w-full justify-between">
@@ -48,7 +50,12 @@ const CartOverview = () => {
               <p className="text-lg underline font-bold">${calculation}</p>
             </div>
           </div>
-          <button className="my-6 border-2 border-neutral-700 px-10 py-2">
+          <button
+            onClick={() => {
+              setSelectedTab("Shipping");
+            }}
+            className="my-6 border-2 border-neutral-700 px-10 py-2"
+          >
             Go to Shipping
           </button>
         </div>
