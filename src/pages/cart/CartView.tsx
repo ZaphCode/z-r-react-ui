@@ -35,7 +35,7 @@ const Cart: FC<Props> = ({ closeFn }) => {
               {cartItems.map((cartItem) => (
                 <ProductInCart key={cartItem.product.id} cardItem={cartItem} />
               ))}
-              <div className="border-t-2 mt-2 border-gray-300">
+              <div className="border-t-2 mt-2 border-gray-200">
                 <div className="flex justify-between  p-2">
                   <p className="pfont text-lg">Total</p>
                   <p className="pfont font-bold text-xl">${calculation}</p>

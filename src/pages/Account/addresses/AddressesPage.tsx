@@ -21,7 +21,7 @@ const Addresses = () => {
           <h4 className="font-bold pfont mb-3 text-neutral-700">
             My Addresses
           </h4>
-          {data.length > 0 ? (
+          {data && data.length > 0 ? (
             <div className="flex flex-col gap-y-5">
               {data.map((addr) => (
                 <div

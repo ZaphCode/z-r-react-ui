@@ -1,11 +1,11 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { BaseLayout } from "./components/icons/BaseLayout";
 import Home from "./pages/home/HomePage";
 import Auth from "./pages/auth/AuthPage";
 import Account from "./pages/account/AccountPage";
 import AuthReq from "./components/AuthReq";
 import Product from "./pages/product/ProductPage";
 import ErrorPage from "./pages/account/ErrorPage";
-import { BaseLayout } from "./components/icons/BaseLayout";
 import CheckoutPage from "./pages/checkout/CheckoutPage";
 
 const router = createBrowserRouter([

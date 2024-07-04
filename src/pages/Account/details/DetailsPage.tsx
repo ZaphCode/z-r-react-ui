@@ -35,11 +35,15 @@ const Details = () => {
         <div className="px-4 py-2">
           <div className="flex justify-between mb-2 ">
             <h4 className="font-bold pfont text-neutral-700">My Information</h4>
-            <button className="underline">Edit</button>
+            <button className="underline pr-4">Edit</button>
           </div>
-          <UserInfoField fieldName="ID" value={user.id} />
+          <UserInfoField fieldName="Name" value={user.username} />
           <UserInfoField fieldName="Email" value={user.email} />
           <UserInfoField fieldName="Age" value={user.age + " years old"} />
+          <UserInfoField
+            fieldName="Customer ID"
+            value={user.customer_id ? user.customer_id : "no defined"}
+          />
         </div>
         <div className="py-2 px-4 pfont">
           <h4 className="font-bold pfont text-neutral-700 mb-2">Privacy</h4>
@@ -71,7 +75,7 @@ function UserInfoField({
 }) {
   return (
     <div className="mb-2 pfont ">
-      <p className="text-neutral-500">{fieldName}:</p>
+      <p className="text-gray-500">{fieldName}:</p>
       <p className="italic text-gray-400">{value}</p>
     </div>
   );

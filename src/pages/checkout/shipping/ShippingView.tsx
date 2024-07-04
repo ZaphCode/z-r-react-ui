@@ -1,13 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Address } from "../../../models";
 import useFetch from "../../../hooks/useFetch";
 import { getAuthUserAddresses } from "../../../api/addresses";
 import { useCheckoutTabsStore } from "../../../stores/checkoutTabs";
+import Spinner from "../../../components/Spinner";
 
 const ShippingView = () => {
-  const { data } = useFetch(getAuthUserAddresses, {});
+  const { data, loading, err, refetch } = useFetch(getAuthUserAddresses, {});
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const setSelectedTab = useCheckoutTabsStore((store) => store.setSelectedTab);
+
+  useEffect(() => {
+    if (err) {
+      const timer = setTimeout(() => {
+        refetch();
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   return (
     <div className="flex mt-4 flex-col items-center gap-4">
@@ -24,7 +35,12 @@ const ShippingView = () => {
         </p>
       </div>
       <div className="bg-white w-3/5 shadow-xl shadow-gray-200">
-        {data !== null && data.length > 0 ? (
+        {loading && (
+          <div>
+            <Spinner />
+          </div>
+        )}
+        {data && data.length > 0 ? (
           <div className="flex flex-col gap-y-5 ">
             {data.map((addr) => (
               <div

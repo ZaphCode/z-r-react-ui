@@ -22,7 +22,7 @@ const SidePanel: FC<Props> = ({ children, closeFn, isOpen, side }) => {
     >
       <div
         className={`
-          bg-white max-h-full overflow-y-auto shadow p-6 transition-transform duration-500 h-full
+          bg-gray-50 shadow-lg shadow-gray-400 max-h-full overflow-y-auto p-6 transition-transform duration-500 h-full
           ${
             isOpen
               ? "translate-x-0"
@@ -36,7 +36,7 @@ const SidePanel: FC<Props> = ({ children, closeFn, isOpen, side }) => {
           onClick={closeFn}
           className={`
             absolute top-2 ${side === "left" ? "right-2" : "left-2"} p-1 
-            rounded-full text-gray-400 bg-white hover:bg-gray-50 hover:text-gray-600
+            rounded-full text-gray-400 bg-gray-50 hover:bg-gray-100 hover:text-gray-600
           `}
         >
           <CloseIcon />

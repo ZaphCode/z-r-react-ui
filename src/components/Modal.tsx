@@ -19,7 +19,7 @@ const Modal: FC<Props> = ({ children, closeFn, isOpen }) => {
       <div
         onClick={(e) => e.stopPropagation()}
         className={`
-              bg-white rounded-xl shadow p-6 transition-all
+              bg-white rounded-xl shadow-gray-400 shadow-lg p-6 transition-all
               ${isOpen ? "scale-100 opacity-100" : "scale-125 opacity-0"}
             `}
       >
