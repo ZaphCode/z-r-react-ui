@@ -6,7 +6,7 @@ const CheckoutTabs = () => {
   return (
     <div className="flex flex-row gap-x-4 justify-center items-baseline">
       {checkoutTabs.map((tab, index) => (
-        <div className="flex gap-x-4 justify-center">
+        <div key={tab.name} className="flex gap-x-4 justify-center">
           <CheckoutTabComp key={index} tab={tab} />
           {index < checkoutTabs.length - 1 && <CheckoutTabDivider />}
         </div>

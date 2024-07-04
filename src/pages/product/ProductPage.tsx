@@ -32,12 +32,12 @@ const ProductPage = () => {
 
   if (err) return <div>Error {err.message}</div>; // TODO: To improve
 
-  return (
+  if (prod) return (
     <div>
       <div className="grid grid-cols-1 lg:grid-cols-2 mt-5 lg:px-16 xl:px-52">
         <div className="flex items-start justify-center px-5">
           <div className="flex flex-col gap-4">
-            {prod.images_url.map((imgSrc, i) => (
+            {prod && prod.images_url.map((imgSrc, i) => (
               <div
                 className={` ${
                   selectedImg === imgSrc ? "bg-gray-300" : "bg-gray-200"

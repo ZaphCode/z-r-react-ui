@@ -19,9 +19,8 @@ const CartOverview = () => {
           {cartItems.length > 0 ? (
             <div className="flex flex-col gap-y-5">
               {cartItems.map((cartItem) => (
-                <div className="bg-white max-w-md px-2 pt-2 pb-5 shadow-lg shadow-neutral-200">
+                <div key={cartItem.product.id} className="bg-white max-w-md px-2 pt-2 pb-5 shadow-lg shadow-neutral-200">
                   <ProductInCart
-                    key={cartItem.product.id}
                     cardItem={cartItem}
                   />
                 </div>

@@ -14,7 +14,7 @@ const ItemCard: FC<Props> = ({ product }) => {
       className="cursor-pointer hover:-translate-y-2 transition-all duration-500 ease-out"
       onClick={() => navigate(`/product/${product.id}`)}
     >
-      <div className="bg-gray-300 w-52 h-56">
+      <div className="bg-gray-200 w-52 h-56">
         <img src={product.images_url[0]} alt="main image" />
       </div>
       <div className="py-5 bg-gray-50 shadow-xl shadow-gray-300 border-gray-200 pl-4">

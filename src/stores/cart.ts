@@ -9,7 +9,6 @@ export interface CartItem {
 
 interface Data {
   items: CartItem[];
-  //prodsCounter: number;
 }
 
 interface Actions {
@@ -29,7 +28,7 @@ export const useCartStore = create(
         );
 
         if (existingCartItem) {
-          let newItems = get().items.map(item => {
+          const newItems = get().items.map(item => {
             if (item.product.id === product.id) {
               return { ...item, quantity: item.quantity + 1 };
             }
@@ -42,13 +41,13 @@ export const useCartStore = create(
         }
       },
       removeFromTheCart(productID) {
-        let filteredItems = get().items.filter(
+        const filteredItems = get().items.filter(
           item => item.product.id !== productID
         );
         set({ ...get(), items: filteredItems });
       },
       removeSingleItem(productID) {
-        let editedItems = get()
+        const editedItems = get()
           .items.map(item => {
             if (item.product.id === productID) {
               item.quantity--;

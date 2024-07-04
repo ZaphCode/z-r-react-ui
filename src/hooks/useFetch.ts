@@ -1,44 +1,53 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { parseAPIError } from "../utils/functions";
 
 type FetchFunction<Data, Arg> = (arg: Arg) => Promise<Data>;
 
-type FetchResult<T> =
-  | { data: T; err: null; loading: boolean }
-  | { data: null; err: Error; loading: boolean };
+type FetchResult<T> = {
+  data: T | null;
+  err: Error | null;
+  loading: boolean;
+  refetch: () => void;
+};
 
 function useFetch<Data, Arg>(
   fetchFunction: FetchFunction<Data, Arg>,
   initialArg: Arg
 ): FetchResult<Data> {
-  const [fetchResultData, setFetchResultData] = useState<FetchResult<Data>>({
+
+  const [fetchResultData, setFetchResultData] = useState<Omit<FetchResult<Data>, 'refetch'>>({
     loading: true,
     data: null,
     err: new Error(""),
   });
 
-  useEffect(() => {
+  const fetchData = useCallback(async (arg: Arg) => {
     setFetchResultData(prev => ({ ...prev, loading: true }));
-    (async function () {
-      try {
-        console.log("fetching");
-        const result = await fetchFunction(initialArg);
-        setFetchResultData(prev => ({ ...prev, data: result, err: null }));
-      } catch (error) {
-        console.log(error);
-        
-        setFetchResultData(prev => ({
-          ...prev,
-          data: null,
-          err: parseAPIError(error),
-        }));
-      } finally {
-        setFetchResultData(prev => ({ ...prev, loading: false }));
-      }
-    })();
+    try {
+      console.log("fetching");
+      const result = await fetchFunction(arg);
+      setFetchResultData(prev => ({ ...prev, data: result, err: null }));
+    } catch (error) {
+      console.log(error);
+      setFetchResultData(prev => ({
+        ...prev,
+        data: null,
+        err: parseAPIError(error),
+      }));
+    } finally {
+      setFetchResultData(prev => ({ ...prev, loading: false }));
+    }
+  }, [fetchFunction]);
+
+  useEffect(() => {
+    fetchData(initialArg);
   }, []);
 
-  return fetchResultData;
+  const refetch = () => {
+    fetchData(initialArg);
+  };
+
+  return { ...fetchResultData, refetch };
 }
 
 export default useFetch;

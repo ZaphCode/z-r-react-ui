@@ -5,7 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { authFormSchema, AuthFormSchemaType } from "../../utils/schemas";
 import { useAuthStore } from "../../stores/auth";
 import { signinAPICall } from "../../api/auth";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import OAuthButtons from "./components/OAuthButtons";
 import { AccountIcon, KeyIcon, UserIcon } from "../../components/icons";
 import AuthInput from "./components/AuthInput";
@@ -24,8 +24,6 @@ const Auth = () => {
   const [isSignupMode, setIsSignupMode] = useState(false);
   const navigate = useNavigate();
   const signin = useAuthStore((store) => store.signin);
-  const location = useLocation();
-  // const lastRedirectedUrl = useAuthStore((store) => store.lastRedirectedUrl);
 
   const onSubmit: SubmitHandler<AuthFormSchemaType> = async (data) => {
     const [resp, err] = await signinAPICall(data, isSignupMode);
@@ -36,13 +34,7 @@ const Auth = () => {
 
     toast.success("Success!");
 
-    setTimeout(
-      () =>
-        location.state
-          ? navigate(location.state.from)
-          : navigate(document.referrer),
-      1000
-    );
+    setTimeout(() => navigate("/"), 1000);
   };
 
   const onError: SubmitErrorHandler<AuthFormSchemaType> = (data) => {
@@ -95,6 +87,7 @@ const Auth = () => {
           registerData={register("email")}
           icon={<AccountIcon />}
           af
+          value="zaph@fapi.com"
           ph="abc@test.mx"
           type="email"
         />
@@ -103,6 +96,7 @@ const Auth = () => {
           registerData={register("password")}
           icon={<KeyIcon />}
           ph="password"
+          value="menosfapi33"
           type="password"
         />
         <button
