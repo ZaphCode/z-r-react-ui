@@ -1,81 +1,118 @@
-import { useState } from "react";
-import { useAsyncOnMount } from "../../../hooks/useAsyncOnMount";
-import { getStripe } from "../../../lib/stripe";
-import {Stripe, StripeCardElement} from "@stripe/stripe-js";
+import { useEffect, useState } from "react";
 import useFetch from "../../../hooks/useFetch";
 import { getAuthUserCards } from "../../../api/card";
 import Spinner from "../../../components/Spinner";
 import { useCheckoutTabsStore } from "../../../stores/checkoutTabs";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import toast from "react-hot-toast";
+import { useCheckoutDataStore } from "../../../stores/checkoutData";
+import { useAuthStore } from "../../../stores/auth";
+import useModal from "../../../hooks/useModal";
+import Modal from "../../../components/Modal";
 
 const PaymentView = () => {
-  const [cardElement, setCardElement] = useState<StripeCardElement | null>();
-  const [saveCardCheck, setSaveCardCheck] = useState(false);
-  const setSelectedTab = useCheckoutTabsStore((store) => store.setSelectedTab);
-  const [cardComplete, setCardComplete] = useState<boolean>()
+  // Fetch
   const { data, loading, err } = useFetch(getAuthUserCards, {});
-  const [stripe, setStripe] = useState<Stripe | null>(null)
+  // Stores
+  const saveCardCheck = useCheckoutDataStore((s) => s.saveNewCard);
+  const selectedCard = useCheckoutDataStore((s) => s.selectedPaymentMethod);
+  const authUser = useAuthStore((s) => s.user);
+  const setSelectedTab = useCheckoutTabsStore((s) => s.setSelectedTab);
+  const setPM = useCheckoutDataStore((s) => s.setSelectPaymentMethod);
+  const setSaveCardCheck = useCheckoutDataStore((s) => s.setSaveNewCard);
+  const [cardName, setCardName] = useState("");
+  const [isOpen, open, close] = useModal();
+  // Local state
+  const [newCardReady, setNewCardReady] = useState(false);
+  const [newCardSelected, setNewCardSelected] = useState(false);
+  // Stripe
+  const stripe = useStripe();
+  const elements = useElements();
 
-  useAsyncOnMount(async () => {
-    const stripeInstance = await getStripe()
+  //* Functions
+  function handleCheckboxChange() {
+    if (!cardName && !saveCardCheck) {
+      open();
+    }
+    setSaveCardCheck(!saveCardCheck);
+  }
 
-    if (!stripeInstance) {
-      return;
+  const handleNextStep = async () => {
+    if (!stripe || !elements) return toast.error("Stripe is not loaded");
+
+    if (newCardSelected && !selectedCard) {
+      if (!newCardReady)
+        return toast.error("Please fill in the card details", {
+          duration: 3000,
+          position: "bottom-right",
+        });
+
+      const card = elements.getElement(CardElement);
+
+      if (!card) return toast.error("Card element not found");
+
+      const { paymentMethod, error } = await stripe.createPaymentMethod({
+        type: "card",
+        card: card,
+        billing_details: {
+          name: cardName || "New Card",
+          phone: authUser?.customer_id,
+        },
+        metadata: { customer_id: authUser?.customer_id },
+      });
+
+      if (error) return toast.error("Failed to create payment method");
+
+      const cardFromPM = paymentMethod.card;
+
+      if (!cardFromPM) return toast.error("Card not found");
+
+      setPM({
+        name: "New Card",
+        payment_id: paymentMethod.id,
+        ...cardFromPM,
+      });
     }
 
-    setStripe(stripeInstance)
-
-    if (!stripe) {
-        return;
-    }
-
-    const card = stripe.elements().create("card", {
-      style: { base: { fontSize: "18px" } },
-    });
-
-    setCardElement(card);
-    card.mount("#card-element");
-
-    card.on("change", (event) => {
-        console.log("aaa", event)
-        if (event.complete) {
-          setCardComplete(true);
-        }
-    });
-
-    card.on("focus", () => {
-        console.log("focus");
-    });
-  });
-
-  const handleNextStep = () => {
-    // validate card has valid data
-    if (!cardComplete) {
-      alert("Please fill in your card details");
-      return;
-    }
-
-    stripe?.createPaymentMethod({
-      type: "card",
-      card: cardElement!,
-    }).then((result) => {
-      if (result.error) {
-        alert("An error occured while processing your payment");
-        return;
-      }
-
-      console.log(result.paymentMethod)
-    });
+    if (selectedCard) setPM(selectedCard);
 
     setSelectedTab("Confirmation");
-  }
+  };
+
+  useEffect(() => {
+    if (!data || data.length === 0) setNewCardSelected(true);
+  }, [data]);
 
   return (
     <div className="w-5/6 flex flex-col items-center mx-auto">
       <h3 className="text-center mb-4 mt-5 pfont text-lg font-semibold">
         Payment
       </h3>
-      <form className="bg-white shadow-lg shadow-gray-200 mb-3 w-3/5 p-7">
-        <div id="card-element">{/* Stripe card element here */}</div>
+      <form className="bg-white relative shadow-lg shadow-gray-200 mb-3 w-3/5 p-7">
+        {newCardSelected && selectedCard ? (
+          <div>
+            <p className="pfont text-gray-600">
+              <b>{selectedCard.name} </b>
+              <b>{selectedCard.brand}</b> **** **** **** {selectedCard.last4}
+            </p>
+          </div>
+        ) : (
+          <CardElement
+            onChange={(e) =>
+              !e.empty && e.complete
+                ? setNewCardReady(true)
+                : setNewCardReady(false)
+            }
+          />
+        )}
+        <div className="absolute top-6 -right-10">
+          <input
+            onChange={(e) => setNewCardSelected(e.target.checked)}
+            className={"scale-150"}
+            checked={newCardSelected}
+            type={"radio"}
+          />
+        </div>
       </form>
       <div className="pb-4 px-16 border-b-2 border-gray-300 mb-7">
         <label
@@ -85,17 +122,29 @@ const PaymentView = () => {
           <div className="flex items-center">
             &#8203;
             <input
+              disabled={!newCardSelected}
               type="checkbox"
               className="size-8 rounded border-gray-300"
-              id="Option1"
               checked={saveCardCheck}
-              onChange={() => setSaveCardCheck(!saveCardCheck)}
+              onChange={handleCheckboxChange}
             />
           </div>
-          <div>
-            <strong className="font-medium text-gray-600">
-              Save card for future payments
-            </strong>
+          <div
+            className={`font-medium${
+              !newCardSelected ? "text-gray-300" : "text-gray-600"
+            }`}
+          >
+            {cardName ? (
+              <p>
+                Save "
+                <button className="underline font-semibold" onClick={open}>
+                  {cardName}
+                </button>
+                " for future payments
+              </p>
+            ) : (
+              <p>Save card for future payments</p>
+            )}
           </div>
         </label>
       </div>
@@ -118,13 +167,18 @@ const PaymentView = () => {
             </div>
           ) : (
             <div className="w-1/2 pfont text-gray-600 py-6 bg-white shadow-lg shadow-gray-200 text-center flex flex-col">
-              ⚠ No cards saved to display
+              No cards saved to display
             </div>
           )}
         </div>
       ) : (
-        // error
-        <div></div>
+        <div>
+          {!loading && err && (
+            <div className="w-3-4 px-5 pfont text-red-900 py-6 bg-white shadow-lg shadow-gray-200 text-center flex flex-col">
+              ⚠ Error getting your saved cards
+            </div>
+          )}
+        </div>
       )}
       <div className="mt-9">
         <button
@@ -134,6 +188,30 @@ const PaymentView = () => {
           Continue
         </button>
       </div>
+      <Modal closeFn={close} isOpen={isOpen}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            close();
+          }}
+          className="w-full p-1"
+        >
+          <h4>Type the card name:</h4>
+          <input
+            autoFocus
+            type="text"
+            value={cardName}
+            onChange={(e) => setCardName(e.target.value)}
+            placeholder="New Card"
+            className="bg-gray-100 focus:border-none my-2 py-2 px-4"
+          />
+          <div className="flex justify-center">
+            <button onClick={close} className="underline font-bold">
+              OK
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };

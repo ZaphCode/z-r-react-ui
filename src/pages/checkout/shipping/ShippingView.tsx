@@ -1,21 +1,20 @@
-import { useEffect, useState } from "react";
-import { Address } from "../../../models";
+import { useEffect } from "react";
 import useFetch from "../../../hooks/useFetch";
 import { getAuthUserAddresses } from "../../../api/addresses";
 import { useCheckoutTabsStore } from "../../../stores/checkoutTabs";
 import Spinner from "../../../components/Spinner";
+import { useCheckoutDataStore } from "../../../stores/checkoutData";
+import toast from "react-hot-toast";
 
 const ShippingView = () => {
   const { data, loading, err, refetch } = useFetch(getAuthUserAddresses, {});
-  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const setSelectedTab = useCheckoutTabsStore((store) => store.setSelectedTab);
+  const setSelectedAddress = useCheckoutDataStore((s) => s.setSelectAddress);
+  const selectedAddress = useCheckoutDataStore((s) => s.selectedAddress);
 
   useEffect(() => {
     if (err) {
-      const timer = setTimeout(() => {
-        refetch();
-      }, 500);
-
+      const timer = setTimeout(() => refetch(), 500);
       return () => clearTimeout(timer);
     }
   }, []);
@@ -84,6 +83,8 @@ const ShippingView = () => {
       <div>
         <button
           onClick={() => {
+            if (!selectedAddress)
+              return toast.error("Please select an address");
             setSelectedTab("Payment");
           }}
           className="btn btn-primary"
