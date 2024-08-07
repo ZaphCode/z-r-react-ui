@@ -26,6 +26,7 @@ const Auth = () => {
   const signin = useAuthStore((store) => store.signin);
 
   const onSubmit: SubmitHandler<AuthFormSchemaType> = async (data) => {
+    alert(data.email + " " + data.password);
     const [resp, err] = await signinAPICall(data, isSignupMode);
 
     if (err) return toast.error(err.message);
@@ -87,7 +88,6 @@ const Auth = () => {
           registerData={register("email")}
           icon={<AccountIcon />}
           af
-          value="zaph@fapi.com"
           ph="abc@test.mx"
           type="email"
         />
@@ -96,7 +96,6 @@ const Auth = () => {
           registerData={register("password")}
           icon={<KeyIcon />}
           ph="password"
-          value="menosfapi33"
           type="password"
         />
         <button

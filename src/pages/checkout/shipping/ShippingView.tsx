@@ -33,14 +33,14 @@ const ShippingView = () => {
             : "❕ Select an address"}
         </p>
       </div>
-      <div className="bg-white w-3/5 shadow-xl shadow-gray-200">
+      <div className=" w-3/5">
         {loading && (
           <div>
             <Spinner />
           </div>
         )}
         {data && data.length > 0 ? (
-          <div className="flex flex-col gap-y-5 ">
+          <div className="flex flex-col gap-y-5 shadow-xl shadow-gray-200 ">
             {data.map((addr) => (
               <div
                 key={addr.id}
@@ -77,7 +77,7 @@ const ShippingView = () => {
             ))}
           </div>
         ) : (
-          <div>sexo</div>
+          <div className="text-gray-600 text-center">no cards saved</div>
         )}
       </div>
       <div>
@@ -87,7 +87,7 @@ const ShippingView = () => {
               return toast.error("Please select an address");
             setSelectedTab("Payment");
           }}
-          className="btn btn-primary"
+          className="my-3 border-2 border-neutral-600 text-neutral-600 px-10 py-2"
         >
           Continue
         </button>
