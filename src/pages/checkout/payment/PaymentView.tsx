@@ -68,7 +68,7 @@ const PaymentView = () => {
       if (!cardFromPM) return toast.error("Card not found");
 
       setPM({
-        name: "New Card",
+        name: cardName || "New Card",
         payment_id: paymentMethod.id,
         ...cardFromPM,
       });
@@ -157,11 +157,16 @@ const PaymentView = () => {
       {!err ? (
         <div className="w-5/6 flex justify-center">
           {data && data.length > 0 ? (
-            <div className="bg-white w-full p-3 flex flex-col">
+            <div className="w-5/6 p-3 flex-col">
               {data.map((card) => (
-                <div key={card.id} className="flex justify-between p-2">
-                  <p className="pfont">{card.brand}</p>
-                  <p className="pfont">**** **** **** {card.last4}</p>
+                <div className="p-3 w-full bg-white">
+                  <div key={card.id} className="flex justify-between p-2">
+                    <p className="pfont truncate w-2/3">
+                      <b className="text-sm mr-2 ">{card.brand}</b> "{card.name}
+                      "
+                    </p>
+                    <p className="pfont">**** **** **** {card.last4}</p>
+                  </div>
                 </div>
               ))}
             </div>

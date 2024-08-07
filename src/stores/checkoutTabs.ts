@@ -11,7 +11,7 @@ interface Actions {
 }
 
 export const useCheckoutTabsStore = create<Data & Actions>((set, get) => ({
-  selectedTab: "Confirmation",
+  selectedTab: "Cart",
   tabs: checkoutTabs,
   setSelectedTab: (sTab) => {
     set({ ...get(), selectedTab: sTab });

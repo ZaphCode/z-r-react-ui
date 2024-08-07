@@ -1,12 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCheckoutDataStore } from "../../../stores/checkoutData";
 import { useCheckoutTabsStore } from "../../../stores/checkoutTabs";
 import { useAuthStore } from "../../../stores/auth";
 import { useCartStore } from "../../../stores/cart";
+import { createOrderAPICall } from "../../../api/order";
+import toast from "react-hot-toast";
+import { saveCardAPICall } from "../../../api/card";
 
 const ConfirmationView = () => {
   const selectedAddress = useCheckoutDataStore((s) => s.selectedAddress);
   const selectedCard = useCheckoutDataStore((s) => s.selectedPaymentMethod);
+  const saveNewCard = useCheckoutDataStore((s) => s.saveNewCard);
+  const [processingCheckout, setProcessingCheckout] = useState(false);
   const user = useAuthStore((s) => s.user);
   const cartItems = useCartStore((s) => s.items);
   const setSelectedTab = useCheckoutTabsStore((s) => s.setSelectedTab);
@@ -15,6 +20,40 @@ const ConfirmationView = () => {
     if (!selectedAddress) setSelectedTab("Shipping");
     if (!selectedCard) setSelectedTab("Payment");
   }, []);
+
+  async function handleCheckout() {
+    if (!selectedAddress || !selectedCard) return toast.error("Missing data");
+
+    setProcessingCheckout(true);
+
+    if (saveNewCard) {
+      const [_, err] = await saveCardAPICall({
+        payment_id: selectedCard.payment_id,
+      });
+
+      if (err) {
+        setProcessingCheckout(false);
+        return toast.error("Error processing or saving your card");
+      }
+    }
+
+    const [_, error] = await createOrderAPICall({
+      address_id: selectedAddress.id,
+      payment_id: selectedCard.payment_id,
+      products: cartItems.map(({ product, quantity }) => ({
+        product_id: product.id,
+        quantity,
+      })),
+    });
+
+    if (error) {
+      setProcessingCheckout(false);
+      return toast.error(error.message);
+    }
+
+    toast.success("Order created successfully");
+    setProcessingCheckout(false);
+  }
 
   return (
     <div className="flex w-full flex-col items-center mx-auto">
@@ -97,7 +136,11 @@ const ConfirmationView = () => {
         </div>
       </div>
       <div className="my-7">
-        <button className="border-blue-500 text-blue-500 text-lg border-2 px-8 py-1">
+        <button
+          onClick={handleCheckout}
+          disabled={processingCheckout}
+          className="border-blue-500 text-blue-500 text-lg border-2 px-8 py-1"
+        >
           Checkout
         </button>
       </div>
