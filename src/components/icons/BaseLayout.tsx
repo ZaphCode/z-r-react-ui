@@ -11,13 +11,15 @@ export const BaseLayout: FC<Props> = ({ children, hideFooter }) => {
     <>
       <div className="flex flex-col min-h-screen">
         <Navbar />
-        <div className="flex-grow">{children}</div>
+        <main className="flex-grow">{children}</main>
         {!hideFooter && (
-          <div className="mt-12 bg-gray-50 pfont text-sm text-gray-500 sm:mt-auto text-center flex-shrink-0 p-4">
-            © {new Date().getFullYear()} Z&H |{" "}
+          <footer className="mt-12 bg-gray-50 pfont text-sm text-gray-500 sm:mt-auto text-center flex-shrink-0 p-4">
+            <small className="text-sm">
+              © {new Date().getFullYear()} Z&H |{" "}
+            </small>
             <button>Términos de servicio</button> |{" "}
             <button>Política de privacidad</button>
-          </div>
+          </footer>
         )}
       </div>
     </>

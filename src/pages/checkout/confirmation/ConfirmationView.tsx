@@ -11,6 +11,7 @@ const ConfirmationView = () => {
   const selectedAddress = useCheckoutDataStore((s) => s.selectedAddress);
   const selectedCard = useCheckoutDataStore((s) => s.selectedPaymentMethod);
   const saveNewCard = useCheckoutDataStore((s) => s.saveNewCard);
+  const resetCheckoutData = useCheckoutDataStore((s) => s.resetData);
   const [processingCheckout, setProcessingCheckout] = useState(false);
   const user = useAuthStore((s) => s.user);
   const cartItems = useCartStore((s) => s.items);
@@ -53,6 +54,7 @@ const ConfirmationView = () => {
 
     toast.success("Order created successfully");
     setProcessingCheckout(false);
+    resetCheckoutData();
   }
 
   return (
@@ -139,9 +141,9 @@ const ConfirmationView = () => {
         <button
           onClick={handleCheckout}
           disabled={processingCheckout}
-          className="border-blue-500 text-blue-500 text-lg border-2 px-8 py-1"
+          className="border-blue-500 text-blue-500 disabled:opacity-40 text-lg border-2 px-8 py-1"
         >
-          Checkout
+          {!processingCheckout ? "Checkout" : "Processing..."}
         </button>
       </div>
     </div>

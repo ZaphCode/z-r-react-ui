@@ -5,7 +5,7 @@ import Spinner from "../../../components/Spinner";
 import { useCheckoutTabsStore } from "../../../stores/checkoutTabs";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import toast from "react-hot-toast";
-import { useCheckoutDataStore } from "../../../stores/checkoutData";
+import { CardTemp, useCheckoutDataStore } from "../../../stores/checkoutData";
 import { useAuthStore } from "../../../stores/auth";
 import useModal from "../../../hooks/useModal";
 import Modal from "../../../components/Modal";
@@ -17,6 +17,8 @@ const PaymentView = () => {
   const saveCardCheck = useCheckoutDataStore((s) => s.saveNewCard);
   const selectedCard = useCheckoutDataStore((s) => s.selectedPaymentMethod);
   const authUser = useAuthStore((s) => s.user);
+  const newCard = useCheckoutDataStore((s) => s.newCard);
+  const setNewCard = useCheckoutDataStore((s) => s.setNewCard);
   const setSelectedTab = useCheckoutTabsStore((s) => s.setSelectedTab);
   const setPM = useCheckoutDataStore((s) => s.setSelectPaymentMethod);
   const setSaveCardCheck = useCheckoutDataStore((s) => s.setSaveNewCard);
@@ -40,7 +42,11 @@ const PaymentView = () => {
   const handleNextStep = async () => {
     if (!stripe || !elements) return toast.error("Stripe is not loaded");
 
-    if (newCardSelected && !selectedCard) {
+    if (newCardSelected && newCard) {
+      setPM(newCard);
+    }
+
+    if (newCardSelected && !newCard) {
       if (!newCardReady)
         return toast.error("Please fill in the card details", {
           duration: 3000,
@@ -67,20 +73,25 @@ const PaymentView = () => {
 
       if (!cardFromPM) return toast.error("Card not found");
 
-      setPM({
+      const newCardTemp: CardTemp = {
         name: cardName || "New Card",
         payment_id: paymentMethod.id,
         ...cardFromPM,
-      });
-    }
+      };
 
-    if (selectedCard) setPM(selectedCard);
+      setNewCard(newCardTemp);
+      setPM(newCardTemp);
+    }
 
     setSelectedTab("Confirmation");
   };
 
   useEffect(() => {
     if (!data || data.length === 0) setNewCardSelected(true);
+    else setNewCardSelected(false);
+
+    if (newCard && newCard.name === selectedCard?.name)
+      setNewCardSelected(true);
   }, [data]);
 
   return (
@@ -89,11 +100,11 @@ const PaymentView = () => {
         Payment
       </h3>
       <form className="bg-white relative shadow-lg shadow-gray-200 mb-3 w-3/5 p-7">
-        {newCardSelected && selectedCard ? (
+        {(newCardSelected && newCard) || newCard ? (
           <div>
             <p className="pfont text-gray-600">
-              <b>{selectedCard.name} </b>
-              <b>{selectedCard.brand}</b> **** **** **** {selectedCard.last4}
+              <b>{newCard.name} </b>
+              <b>{newCard.brand}</b> **** **** **** {newCard.last4}
             </p>
           </div>
         ) : (
@@ -107,10 +118,19 @@ const PaymentView = () => {
         )}
         <div className="absolute top-6 -right-10">
           <input
-            onChange={(e) => setNewCardSelected(e.target.checked)}
+            onChange={(e) => {
+              setNewCardSelected(e.target.checked);
+              if (newCardSelected && newCard) setPM(newCard);
+              else {
+                setPM(null);
+                setNewCardReady(false);
+              }
+            }}
             className={"scale-150"}
             checked={newCardSelected}
             type={"radio"}
+            name=" "
+            radioGroup="sexo"
           />
         </div>
       </form>
@@ -130,7 +150,7 @@ const PaymentView = () => {
             />
           </div>
           <div
-            className={`font-medium${
+            className={`font-medium ${
               !newCardSelected ? "text-gray-300" : "text-gray-600"
             }`}
           >
@@ -157,15 +177,27 @@ const PaymentView = () => {
       {!err ? (
         <div className="w-5/6 flex justify-center">
           {data && data.length > 0 ? (
-            <div className="w-5/6 p-3 flex-col">
+            <div className="w-5/6 p-3 flex flex-col gap-y-5">
               {data.map((card) => (
-                <div className="p-3 w-full bg-white">
-                  <div key={card.id} className="flex justify-between p-2">
-                    <p className="pfont truncate w-2/3">
-                      <b className="text-sm mr-2 ">{card.brand}</b> "{card.name}
-                      "
-                    </p>
-                    <p className="pfont">**** **** **** {card.last4}</p>
+                <div
+                  className={`cursor-pointer transition-all ease-in-out duration-300 ${
+                    !newCardSelected && selectedCard?.name === card.name
+                      ? "shadow-lg shadow-neutral-300 scale-105 "
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setPM(card);
+                    setNewCardSelected(false);
+                  }}
+                >
+                  <div className="p-3 w-full bg-white">
+                    <div key={card.id} className="flex justify-between p-2">
+                      <p className="pfont truncate w-2/3">
+                        <b className="text-sm mr-2 ">{card.brand}</b> "
+                        {card.name}"
+                      </p>
+                      <p className="pfont">**** **** **** {card.last4}</p>
+                    </div>
                   </div>
                 </div>
               ))}

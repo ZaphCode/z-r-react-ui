@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { CartItem, useCartStore } from "../stores/cart";
-import { formatPrice } from "../utils/functions";
+import { formatPrice, getDiscountPrice } from "../utils/functions";
 import CloseIcon from "./icons/CloseIcon";
 
 interface Props {
@@ -13,17 +13,17 @@ const ProductInCart: FC<Props> = ({ cardItem: { product, quantity } }) => {
   const removeSingleItem = useCartStore((store) => store.removeSingleItem);
 
   return (
-    <div key={product.id} className="flex justify-between">
-      <div className="w-1/5">
+    <article key={product.id} className="flex justify-between">
+      <figure className="w-1/5">
         <img
           src={product.images_url[0]}
           className="w-full h-20 object-cover"
           alt="product image"
         />
-      </div>
+      </figure>
       <div className="flex w-4/5 pl-3 pt-3">
         <div className=" w-2/3">
-          <p className="truncate text-lg">{product.name}</p>
+          <h4 className="truncate text-lg">{product.name}</h4>
           <p className="truncate text-sm mb-1">{product.description}</p>
           <div className="flex text-neutral-600 font-semibold items-baseline">
             <button
@@ -46,24 +46,18 @@ const ProductInCart: FC<Props> = ({ cardItem: { product, quantity } }) => {
         <div className="flex w-1/3 gap-y-1 pt-1 items-end justify-between px-1 flex-col">
           <button
             onClick={() => removeFromCart(product.id)}
-            className={`
-            rounded-full text-gray-800 font-bold hover:text-gray-400
-          `}
+            className="rounded-full text-gray-800 font-bold hover:text-gray-400"
           >
             <CloseIcon />
           </button>
           <span className="text-xl font-semibold pr-1">
             {product.discount_rate !== 0
-              ? formatPrice(
-                  (product.price -
-                    product.price * (product.discount_rate / 100)) *
-                    quantity
-                )
+              ? formatPrice(getDiscountPrice(product) * quantity)
               : formatPrice(product.price * quantity)}
           </span>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 
