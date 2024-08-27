@@ -9,4 +9,5 @@ export interface Card {
   last4: string;
   created_at: string;
   updated_at: string;
+  payment_id: string;
 }

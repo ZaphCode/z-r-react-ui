@@ -24,7 +24,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="py-3  grid px-2 grid-cols-2 xl:mx-20 lg:mx-16 md:py-6 md:mx-9 sm:grid-cols-3 mx-2 sm:mx-4">
+    <nav className="py-3  grid px-2 grid-cols-2 xl:mx-20 lg:mx-16 md:py-6 md:mx-9 sm:grid-cols-3 mx-2 sm:mx-4">
       <div className="col-span-1 flex items-center">
         <div className="bg-neutral-950 shadow-md shadow-gray-700 cursor-pointer flex justify-center items-center h-8 md:h-10 md:w-10 rounded-full w-8">
           <BurgerIcon />
@@ -34,9 +34,9 @@ const Navbar = () => {
         </div>
         <NavbarTitle small={true} />
       </div>
-      <div className="hidden sm:flex items-center justify-center col-span-1">
+      <header className="hidden sm:flex items-center justify-center col-span-1">
         <NavbarTitle small={false} />
-      </div>
+      </header>
       <div className="flex justify-end items-center">
         <div>
           <Link
@@ -66,7 +66,7 @@ const Navbar = () => {
           <CardUI closeFn={closeSP} />
         </div>
       </SidePanel>
-    </div>
+    </nav>
   );
 };
 

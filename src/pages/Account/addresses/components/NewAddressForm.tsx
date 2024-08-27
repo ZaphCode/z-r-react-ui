@@ -33,13 +33,13 @@ const NewAddressForm: FC<Props> = ({ closeModalFn }) => {
   };
 
   const onError: SubmitErrorHandler<NewAddressSchemaType> = (data) => {
-    if (data.city?.message) toast.error(data.city.message);
-    if (data.country?.message) toast.error(data.country.message);
-    if (data.line1?.message) toast.error(data.line1.message);
-    if (data.line2?.message) toast.error(data.line2.message);
-    if (data.name?.message) toast.error(data.name.message);
-    if (data.postal_code?.message) toast.error(data.postal_code.message);
-    if (data.state?.message) toast.error(data.state.message);
+    if (data.name?.message) return toast.error(data.name.message);
+    if (data.line1?.message) return toast.error(data.line1.message);
+    if (data.line2?.message) return toast.error(data.line2.message);
+    if (data.city?.message) return toast.error(data.city.message);
+    if (data.country?.message) return toast.error(data.country.message);
+    if (data.postal_code?.message) return toast.error(data.postal_code.message);
+    if (data.state?.message) return toast.error(data.state.message);
   };
 
   return (
