@@ -6,8 +6,8 @@ import { useAuthStore } from "../stores/auth";
 import { useCartStore } from "../stores/cart";
 import { useEffect, useState } from "react";
 import useModal from "../hooks/useModal";
-import SidePanel from "./SidePanel";
-import CardUI from "../pages/cart/CartView";
+import SidePanel from "./ui/SidePanel";
+import CardView from "./CartList";
 
 const Navbar = () => {
   const authenticated = useAuthStore((store) => store.authenticated);
@@ -63,7 +63,7 @@ const Navbar = () => {
       </div>
       <SidePanel side="right" isOpen={isSPOpen} closeFn={closeSP}>
         <div className="w-[520px]">
-          <CardUI closeFn={closeSP} />
+          <CardView closeFn={closeSP} />
         </div>
       </SidePanel>
     </nav>
