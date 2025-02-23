@@ -14,30 +14,34 @@ function useFetch<Data, Arg>(
   fetchFunction: FetchFunction<Data, Arg>,
   initialArg: Arg
 ): FetchResult<Data> {
-
-  const [fetchResultData, setFetchResultData] = useState<Omit<FetchResult<Data>, 'refetch'>>({
+  const [fetchResultData, setFetchResultData] = useState<
+    Omit<FetchResult<Data>, "refetch">
+  >({
     loading: true,
     data: null,
     err: new Error(""),
   });
 
-  const fetchData = useCallback(async (arg: Arg) => {
-    setFetchResultData(prev => ({ ...prev, loading: true }));
-    try {
-      console.log("fetching");
-      const result = await fetchFunction(arg);
-      setFetchResultData(prev => ({ ...prev, data: result, err: null }));
-    } catch (error) {
-      console.log(error);
-      setFetchResultData(prev => ({
-        ...prev,
-        data: null,
-        err: parseAPIError(error),
-      }));
-    } finally {
-      setFetchResultData(prev => ({ ...prev, loading: false }));
-    }
-  }, [fetchFunction]);
+  const fetchData = useCallback(
+    async (arg: Arg) => {
+      setFetchResultData((prev) => ({ ...prev, loading: true }));
+      try {
+        console.log("fetching");
+        const result = await fetchFunction(arg);
+        setFetchResultData((prev) => ({ ...prev, data: result, err: null }));
+      } catch (error) {
+        console.log(error);
+        setFetchResultData((prev) => ({
+          ...prev,
+          data: null,
+          err: parseAPIError(error),
+        }));
+      } finally {
+        setFetchResultData((prev) => ({ ...prev, loading: false }));
+      }
+    },
+    [fetchFunction]
+  );
 
   useEffect(() => {
     fetchData(initialArg);

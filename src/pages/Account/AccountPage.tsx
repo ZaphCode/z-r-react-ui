@@ -1,10 +1,10 @@
-import AccountDropdown from "./components/AccountDropdown";
-import AccountTabs from "./components/AccountTabs";
+import AccountDropdown from "../../components/AccountDropdown";
+import AccountTabs from "../../components/AccountTabs";
 import { useAccountTabsStore } from "../../stores/accountTabs";
-import Details from "./details/DetailsPage";
-import Addresses from "./addresses/AddressesPage";
-import Orders from "./orders/OrdersPage";
-import PaymentMethods from "./payment/PaymentMethodsPage";
+import AddressesView from "./AddressView";
+import OrdersView from "./OrdersView";
+import DetailsView from "./DetailsView";
+import PaymentMethodsView from "./PaymentMethodsPage";
 
 const Account = () => {
   return (
@@ -31,10 +31,10 @@ const ActiveTab = () => {
   const activeTab = useAccountTabsStore((store) => store.selectedTab);
 
   const tabs = {
-    "Account Details": <Details />,
-    "Payment Methods": <PaymentMethods />,
-    Addresses: <Addresses />,
-    Orders: <Orders />,
+    "Account Details": <DetailsView />,
+    "Payment Methods": <PaymentMethodsView />,
+    Addresses: <AddressesView />,
+    Orders: <OrdersView />,
   };
 
   return tabs[activeTab];

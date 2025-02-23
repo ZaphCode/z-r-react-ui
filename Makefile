@@ -5,7 +5,7 @@ runbackdev:
 	cd ${BACKEND_DIR} && go run cmd/main.go dev
 
 runfrontdev:
-	sleep 2 && yarn dev
+	sleep 1 && yarn dev
 
 openweb:
 	sleep 3 && open ${FRONTEND_WEB_URL}
